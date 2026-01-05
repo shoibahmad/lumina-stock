@@ -75,5 +75,11 @@ linux/flutter/ephemeral/
 # macOS
 macos/flutter/ephemeral/
 
-# Env
-.env
+
+# Firebase
+**/android/app/google-services.json
+**/ios/Runner/GoogleService-Info.plist
+lib/firebase_options.dart
+.firebaserc
+firebase.json
+

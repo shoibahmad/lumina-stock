@@ -282,7 +282,7 @@ class _ProductListPageState extends State<ProductListPage> {
                     crossAxisCount: 2, 
                     mainAxisSpacing: 16,
                     crossAxisSpacing: 16,
-                    childAspectRatio: 0.60,
+                    childAspectRatio: 0.55,
                   ),
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {
@@ -397,7 +397,7 @@ class ProductCard extends StatelessWidget {
             
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.all(12.0),
+                padding: const EdgeInsets.all(10.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -413,59 +413,52 @@ class ProductCard extends StatelessWidget {
                       ),
                     ),
                     const Spacer(),
-                    const SizedBox(height: 8),
-                    
+                    const SizedBox(height: 4),
+
                     // Pricing
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.end,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        Text(
+                          'Buy: ${formatCurrency.format(product.buyingPrice)}',
+                          style: TextStyle(
+                            color: Colors.grey[600],
+                            fontSize: 11,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        Text(
+                          formatCurrency.format(product.sellingPrice),
+                          style: GoogleFonts.poppins(
+                            color: AppTheme.primaryBlue,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    // Actions
+                    if (isAdmin)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Text(
-                              'Buy: ${formatCurrency.format(product.buyingPrice)}',
-                              style: TextStyle(
-                                color: Colors.grey[600],
-                                fontSize: 11,
-                                fontWeight: FontWeight.w500,
-                              ),
+                            _ActionButton(
+                              icon: Icons.edit_outlined,
+                              color: AppTheme.primaryBlue,
+                              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => AddProductPage(productToEdit: product)))
                             ),
-                            Text(
-                              formatCurrency.format(product.sellingPrice),
-                              style: GoogleFonts.poppins(
-                                color: AppTheme.primaryBlue,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                              ),
+                            const SizedBox(width: 8),
+                            _ActionButton(
+                              icon: Icons.delete_outline,
+                              color: AppTheme.errorRed,
+                              onTap: () => _confirmDelete(context),
                             ),
                           ],
                         ),
-                        // Actions
-                        if (isAdmin) 
-                          Row(
-                            children: [
-                              _ActionButton(
-                                icon: Icons.edit_outlined, 
-                                color: AppTheme.primaryBlue, 
-                                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => AddProductPage(productToEdit: product)))
-                              ),
-                              const SizedBox(width: 8),
-                              _ActionButton(
-                                icon: Icons.delete_outline, 
-                                color: AppTheme.errorRed, 
-                                onTap: () async {
-                                   // Delete logic repeated - can refactor later but inline is ok
-                                   // ... (Keep existing logic short for now) or call helper?
-                                   // Since I'm replacing content, I must implement it or keep it.
-                                   // Let's use the EXISTING logic block but compact.
-                                   _confirmDelete(context);
-                                }
-                              ),
-                            ],
-                          )
-                      ],
-                    ),
+                      )
                   ],
                 ),
               ),
@@ -473,10 +466,10 @@ class ProductCard extends StatelessWidget {
 
             if (isAdmin)
                Padding(
-                 padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+                 padding: const EdgeInsets.fromLTRB(12, 0, 12, 10),
                  child: SizedBox(
                     width: double.infinity,
-                    height: 40,
+                    height: 36,
                     child: ElevatedButton(
                       onPressed: product.quantity > 0 ? () => _showSellDialog(context) : null,
                       style: ElevatedButton.styleFrom(
